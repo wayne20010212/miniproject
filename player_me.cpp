@@ -212,38 +212,50 @@ public:
             {
                 if (board[i][j] == player)
                 {
-                    heu++;
+                    heu+=2;
                     if ((i <= 1 || i >= SIZE - 2) && (j <= 1 || j >= SIZE - 2))
                     {
                         if ((i == 0 || i == SIZE - 1) && (j == 0 || j == SIZE - 1))
                         {
                             heu += 1000;
                             if ((i == 0 && board[i + 1][j] == player) )
-                                heu += 35;
-                            else if((i == SIZE - 1 && board[i - 1][j] == player) )
-                                heu+=35;
-                            else if((j == 0 && board[i][j + 1] == player)  )
-                                heu+=35;
-                            else if((j == SIZE - 1 && board[i][j - 1] == player) )
-                                heu+=35;
+                                heu += 85;
+                            if((i == SIZE - 1 && board[i - 1][j] == player) )
+                                heu+=85;
+                            if((j == 0 && board[i][j + 1] == player)  )
+                                heu+=85;
+                            if((j == SIZE - 1 && board[i][j - 1] == player) )
+                                heu+=85;
+
+                            if(i==0&&j ==0&&board[i+1][j+1]== player)
+                                heu+=85;
+                            if(i==0&&j ==SIZE-1&&board[i+1][j-1]== player)
+                                heu+=85;
+                            if(i==SIZE-1&&j ==0&&board[i-1][j+1]== player)
+                                heu+=85;
+                            if(i==SIZE-1&&j ==SIZE-1&&board[i-1][j-1]== player)
+                                heu+=85;
                         }
                         else
                         {
-                            heu -= 35;
+                            heu -= 70;
                         }
                     }
                     if ((i == 0 || i == SIZE - 1) || (j == 0 || j == SIZE - 1))
                     {
-                        heu += 5;
+                        heu += 10;
                     }
+                }
+                if(board[i][j]==3-player)
+                {
+                    heu -=1;
                 }
             }
         }
         
-        cur_player=this->get_next_player(cur_player);
-        std::vector<Point> enemy =this->get_valid_spots();
-        heu-=enemy.size();
-        cur_player=this->get_next_player(cur_player);
+        
+        
+        heu-= next_valid_spots.size();
 
         return heu;
     }
