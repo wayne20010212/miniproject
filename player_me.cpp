@@ -264,11 +264,18 @@ public:
             }
         }
         
+<<<<<<< HEAD
         heu-= next_valid_spots.size();
         if(next_valid_spots.size()== 0)
         {
             heu+=15;
         }
+=======
+        
+        
+        heu-= next_valid_spots.size();
+
+>>>>>>> cc0169e1e7720f0e208f0ba71a6911a45696c609
         return heu;
     }
 };
