@@ -222,22 +222,22 @@ public:
                         {
                             heu += 1000;
                             if ((i == 0 && board[i + 1][j] == player) )
-                                heu += 75;
+                                heu += 60;
                             if((i == SIZE - 1 && board[i - 1][j] == player) )
-                                heu+=75;
+                                heu+=60;
                             if((j == 0 && board[i][j + 1] == player)  )
-                                heu+=75;
+                                heu+=60;
                             if((j == SIZE - 1 && board[i][j - 1] == player) )
-                                heu+=75;
+                                heu+=60;
 
                             if(i==0&&j ==0&&board[i+1][j+1]== player)
-                                heu+=75;
+                                heu+=60;
                             if(i==0&&j ==SIZE-1&&board[i+1][j-1]== player)
-                                heu+=75;
+                                heu+=60;
                             if(i==SIZE-1&&j ==0&&board[i-1][j+1]== player)
-                                heu+=75;
+                                heu+=60;
                             if(i==SIZE-1&&j ==SIZE-1&&board[i-1][j-1]== player)
-                                heu+=75;
+                                heu+=60;
                         }
                         else
                         {
@@ -252,14 +252,23 @@ public:
                 if(board[i][j]==3-player)
                 {
                     heu -=1;
+                    if((i == 0 || i == SIZE - 1) && (j == 0 || j == SIZE - 1))
+                    {
+                        heu-=500;
+                    }
+                    if ((i == 0 || i == SIZE - 1) || (j == 0 || j == SIZE - 1))
+                    {
+                        heu -= 5;
+                    }
                 }
             }
         }
         
-        
-        
-        heu-= 2*next_valid_spots.size();
-
+        heu-= next_valid_spots.size();
+        if(next_valid_spots.size()== 0)
+        {
+            heu+=15;
+        }
         return heu;
     }
 };
@@ -291,12 +300,7 @@ void read_valid_spots(std::ifstream &fin)
 
 int alphabeta( OthelloBoard* pre ,int depth,int a, int b) 
 {
-    /*
-    if(depth==search&&pre->next_valid_spots.size()==0)
-    {
-        return 0;
-    }
-    */
+
     if (depth == 0 || pre->next_valid_spots.size()==0) 
         return pre->get_state_value();
 
@@ -353,30 +357,13 @@ int alphabeta( OthelloBoard* pre ,int depth,int a, int b)
 
 void write_valid_spot(std::ofstream &fout)
 {
-    /*
-    int flag = 0,temp = 0, k = 0;
-    for (int i = 0; i < n_valid_spots; i++)
-    {
-        OthelloBoard o;
-        o.board = myboard;
-        o.cur_player= player;
-        o.put_disc(next_valid_spots[i]);
-        temp = o.get_state_value();
-        if (temp > flag)
-        {
-            k = i;
-            flag=temp;
-        }
-    }
-    */
+
     OthelloBoard o;
     o.board = myboard;
     o.cur_player= player;
     o.next_valid_spots  =my_next_valid_spots;
     int k = alphabeta( &o ,search,-2147483647,2147483647);
     Point p = my_next_valid_spots[k];
-
-    // Remember to flush the output to ensure the last action is written to file.
 
     fout << p.x << " " << p.y << std::endl;
     fout.flush();

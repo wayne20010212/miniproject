@@ -138,6 +138,7 @@ public:
     bool put_disc(Point p) {
         if(!is_spot_valid(p)) {
             winner = get_next_player(cur_player);
+            std::cout<<p.x<<" "<<p.y<<std::endl;
             done = true;
             return false;
         }
@@ -232,7 +233,7 @@ const std::string file_log = "gamelog.txt";
 const std::string file_state = "state";
 const std::string file_action = "action";
 // Timeout is set to 10 when TA test your code.
-const int timeout = 0.1;
+const int timeout = 10;
 
 void launch_executable(std::string filename) {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
