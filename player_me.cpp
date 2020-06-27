@@ -222,22 +222,22 @@ public:
                         {
                             heu += 1000;
                             if ((i == 0 && board[i + 1][j] == player) )
-                                heu += 75;
+                                heu += 60;
                             if((i == SIZE - 1 && board[i - 1][j] == player) )
-                                heu+=75;
+                                heu+=60;
                             if((j == 0 && board[i][j + 1] == player)  )
-                                heu+=75;
+                                heu+=60;
                             if((j == SIZE - 1 && board[i][j - 1] == player) )
-                                heu+=75;
+                                heu+=60;
 
                             if(i==0&&j ==0&&board[i+1][j+1]== player)
-                                heu+=75;
+                                heu+=60;
                             if(i==0&&j ==SIZE-1&&board[i+1][j-1]== player)
-                                heu+=75;
+                                heu+=60;
                             if(i==SIZE-1&&j ==0&&board[i-1][j+1]== player)
-                                heu+=75;
+                                heu+=60;
                             if(i==SIZE-1&&j ==SIZE-1&&board[i-1][j-1]== player)
-                                heu+=75;
+                                heu+=60;
                         }
                         else
                         {
@@ -252,13 +252,21 @@ public:
                 if(board[i][j]==3-player)
                 {
                     heu -=1;
+                    if((i == 0 || i == SIZE - 1) && (j == 0 || j == SIZE - 1))
+                    {
+                        heu-=500;
+                    }
+                    if ((i == 0 || i == SIZE - 1) || (j == 0 || j == SIZE - 1))
+                    {
+                        heu -= 5;
+                    }
                 }
             }
         }
         
         
         
-        heu-= 2*next_valid_spots.size();
+        heu-= next_valid_spots.size();
 
         return heu;
     }
