@@ -5,11 +5,8 @@
 #include <cstdlib>
 #include <ctime>
 
-using namespace std;
-
 int player;
 const int SIZE = 8;
-const int search =6;
 
 struct Point
 {
@@ -35,7 +32,7 @@ struct Point
 };
 
 std::array<std::array<int, SIZE>, SIZE> myboard;
-std::vector<Point> my_next_valid_spots;
+std::vector<Point> next_valid_spots;
 
 class OthelloBoard
 {
@@ -222,26 +219,26 @@ public:
                         {
                             heu += 1000;
                             if ((i == 0 && board[i + 1][j] == player) )
-                                heu += 75;
+                                heu += 85;
                             if((i == SIZE - 1 && board[i - 1][j] == player) )
-                                heu+=75;
+                                heu+=85;
                             if((j == 0 && board[i][j + 1] == player)  )
-                                heu+=75;
+                                heu+=85;
                             if((j == SIZE - 1 && board[i][j - 1] == player) )
-                                heu+=75;
+                                heu+=85;
 
                             if(i==0&&j ==0&&board[i+1][j+1]== player)
-                                heu+=75;
+                                heu+=85;
                             if(i==0&&j ==SIZE-1&&board[i+1][j-1]== player)
-                                heu+=75;
+                                heu+=85;
                             if(i==SIZE-1&&j ==0&&board[i-1][j+1]== player)
-                                heu+=75;
+                                heu+=85;
                             if(i==SIZE-1&&j ==SIZE-1&&board[i-1][j-1]== player)
-                                heu+=75;
+                                heu+=85;
                         }
                         else
                         {
-                            heu -= 60;
+                            heu -= 70;
                         }
                     }
                     if ((i == 0 || i == SIZE - 1) || (j == 0 || j == SIZE - 1))
@@ -258,7 +255,7 @@ public:
         
         
         
-        heu-= 2*next_valid_spots.size();
+        heu-= next_valid_spots.size();
 
         return heu;
     }
@@ -284,76 +281,13 @@ void read_valid_spots(std::ifstream &fin)
     for (int i = 0; i < n_valid_spots; i++)
     {
         fin >> x >> y;
-        my_next_valid_spots.push_back({x, y});
-    }
-}
-
-
-int alphabeta( OthelloBoard* pre ,int depth,int a, int b) 
-{
-    /*
-    if(depth==search&&pre->next_valid_spots.size()==0)
-    {
-        return 0;
-    }
-    */
-    if (depth == 0 || pre->next_valid_spots.size()==0) 
-        return pre->get_state_value();
-
-    
-    int n_valid_spots = pre->next_valid_spots.size();
-    int k=0,temp;
-    if (pre->cur_player == player){
-        int value =-2147483647;
-        
-        for (int i = 0; i < n_valid_spots; i++)
-        {
-            OthelloBoard o ;
-            o.board = pre->board;
-            o.cur_player = pre->cur_player;
-            o.next_valid_spots = pre->next_valid_spots;
-            o.put_disc(pre->next_valid_spots[i]);
-            
-            temp = alphabeta(&o, depth-1,a,b);
-            if(temp>value)
-            {
-                value = temp;
-                k=i;
-            }
-            a = max(a, value);
-
-            if (a >= b)
-                break;
-        }
-        if(depth== search)
-        {
-            return k;
-        }
-        return value;
-    }
-    else{
-        int value =2147483647;
-       for (int i = 0; i < n_valid_spots; i++)
-        {
-            OthelloBoard o ;
-            o.board = pre->board;
-            o.cur_player = pre->cur_player;
-            o.next_valid_spots = pre->next_valid_spots;
-            o.put_disc(pre->next_valid_spots[i]);
-            
-            temp = alphabeta(&o, depth-1,a,b);
-            value = min(value, temp);
-            b = min(b, value);
-            if (a >= b)
-                break;
-        }
-        return value;
+        next_valid_spots.push_back({x, y});
     }
 }
 
 void write_valid_spot(std::ofstream &fout)
 {
-    /*
+    int n_valid_spots = next_valid_spots.size();
     int flag = 0,temp = 0, k = 0;
     for (int i = 0; i < n_valid_spots; i++)
     {
@@ -368,14 +302,8 @@ void write_valid_spot(std::ofstream &fout)
             flag=temp;
         }
     }
-    */
-    OthelloBoard o;
-    o.board = myboard;
-    o.cur_player= player;
-    o.next_valid_spots  =my_next_valid_spots;
-    int k = alphabeta( &o ,search,-2147483647,2147483647);
-    Point p = my_next_valid_spots[k];
 
+    Point p = next_valid_spots[k];
     // Remember to flush the output to ensure the last action is written to file.
 
     fout << p.x << " " << p.y << std::endl;
